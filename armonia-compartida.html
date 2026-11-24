@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#151d3b">
+<title>Acuerdos y fechas del equipo</title>
+<style>
+  :root {
+    --ink: #17213f;
+    --ink-soft: #52617d;
+    --night: #111934;
+    --paper: #ffffff;
+    --lilac: #efefff;
+    --violet: #6658e8;
+    --violet-dark: #4639ba;
+    --cyan: #24c8d1;
+    --mint: #bdffd6;
+    --gold: #ffcf70;
+    --pink: #ffdbec;
+    --danger: #a82146;
+    --line: #dbe1f2;
+    --shadow: 0 1.3rem 3.4rem rgba(30, 38, 81, .16);
+    --round: 1.45rem;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { font-size: 112.5%; scroll-behavior: smooth; }
+  body {
+    min-width: 320px;
+    margin: 0;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 8% 10%, rgba(36, 200, 209, .22), transparent 28rem),
+      radial-gradient(circle at 90% 34%, rgba(124, 105, 255, .2), transparent 29rem),
+      linear-gradient(135deg, #f7f8ff 0%, #f2f0ff 49%, #e9fbfa 100%);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    font-size: 1.08rem;
+    line-height: 1.58;
+  }
+  body::before, body::after {
+    position: fixed;
+    z-index: -1;
+    width: 17rem;
+    height: 17rem;
+    border-radius: 50%;
+    content: "";
+    filter: blur(2px);
+    opacity: .38;
+    pointer-events: none;
+  }
+  body::before { top: 47%; left: -10rem; background: var(--gold); }
+  body::after { top: -8rem; right: -8rem; background: var(--pink); }
+  button, textarea, input { font: inherit; }
+  button { -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: .22rem solid var(--cyan); outline-offset: .25rem; }
+
+  .top {
+    position: sticky;
+    z-index: 10;
+    top: 0;
+    overflow: hidden;
+    color: #fff;
+    background: rgba(17, 25, 52, .94);
+    box-shadow: 0 .35rem 1.4rem rgba(17, 25, 52, .16);
+    backdrop-filter: blur(14px);
+  }
+  .top-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 72rem;
+    margin: auto;
+    padding: .75rem 1.15rem;
+  }
+  .brand { display: flex; align-items: center; gap: .65rem; font-weight: 800; letter-spacing: -.02em; }
+  .brand-mark {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    color: var(--night);
+    background: linear-gradient(145deg, #fff 10%, var(--cyan));
+    border-radius: .62rem;
+    box-shadow: inset -.12rem -.15rem 0 rgba(17, 25, 52, .2), .14rem .18rem 0 rgba(255,255,255,.2);
+    transform: rotate(-8deg);
+  }
+  .offline { display: flex; align-items: center; gap: .42rem; font-size: .82rem; font-weight: 700; }
+  .offline::before { width: .58rem; height: .58rem; content: ""; background: var(--mint); border-radius: 50%; box-shadow: 0 0 .7rem var(--mint); }
+
+  .shell { max-width: 72rem; margin: 0 auto; padding: 1.6rem 1.15rem 3.5rem; }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .5rem;
+    max-width: 43rem;
+    margin: 0 auto 1.4rem;
+    padding: 0;
+    list-style: none;
+  }
+  .steps li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .38rem;
+    min-height: 2.45rem;
+    padding: .35rem .65rem;
+    color: var(--ink-soft);
+    font-size: .85rem;
+    font-weight: 800;
+    text-align: center;
+    background: rgba(255,255,255,.62);
+    border: 1px solid rgba(211, 217, 239, .9);
+    border-radius: 999px;
+  }
+  .steps li::before {
+    display: grid;
+    width: 1.24rem;
+    height: 1.24rem;
+    place-items: center;
+    color: #fff;
+    content: attr(data-number);
+    background: #a5aec4;
+    border-radius: 50%;
+    font-size: .7rem;
+  }
+  .steps li.active { color: var(--violet-dark); background: #fff; box-shadow: 0 .4rem 1rem rgba(74, 61, 178, .12); }
+  .steps li.active::before { background: var(--violet); }
+
+  .screen {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,.9);
+    border: 1px solid rgba(255,255,255,.95);
+    border-radius: calc(var(--round) + .35rem);
+    box-shadow: var(--shadow);
+  }
+  .screen.enter { animation: arrive .5s cubic-bezier(.2,.8,.25,1) both; }
+  @keyframes arrive {
+    from { opacity: 0; transform: translateY(.8rem) rotateX(2deg) scale(.985); }
+    to { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
+  }
+  .screen::after {
+    position: absolute;
+    top: -8rem;
+    right: -7rem;
+    width: 18rem;
+    height: 18rem;
+    content: "";
+    background: radial-gradient(circle, rgba(102,88,232,.12), transparent 67%);
+    pointer-events: none;
+  }
+  .screen-pad { position: relative; z-index: 1; padding: clamp(1.25rem, 4vw, 3rem); }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    margin: 0 0 .72rem;
+    padding: .36rem .72rem;
+    color: var(--violet-dark);
+    background: var(--lilac);
+    border: 1px solid #d9d4ff;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 800;
+  }
+  .eyebrow::before { content: "✦"; }
+  h1, h2, h3 { margin: 0; line-height: 1.1; letter-spacing: -.045em; }
+  h1 { max-width: 10ch; font-size: clamp(2.5rem, 6.3vw, 5.1rem); }
+  h2 { font-size: clamp(2.05rem, 5vw, 3.5rem); }
+  h3 { font-size: 1.18rem; letter-spacing: -.025em; }
+  h1:focus, h2:focus, h3:focus { outline: none; }
+  p { margin: 0 0 1rem; }
+  .lead { max-width: 36rem; margin-top: 1.1rem; color: var(--ink-soft); font-size: clamp(1.1rem, 2.1vw, 1.35rem); }
+  .muted { color: var(--ink-soft); }
+  .fictitious {
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding: .75rem .9rem;
+    color: #5a3a00;
+    background: #fff7db;
+    border: 1px solid #f0c45e;
+    border-radius: .8rem;
+    font-size: .96rem;
+    font-weight: 700;
+  }
+  .fictitious > span { display: grid; flex: none; width: 1.45rem; height: 1.45rem; place-items: center; color: #fff; background: #b57700; border-radius: 50%; }
+
+  .home-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(17rem, .76fr); gap: clamp(1.5rem, 5vw, 4rem); align-items: center; }
+  .actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.6rem; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 3.2rem;
+    padding: .75rem 1.1rem;
+    color: var(--violet-dark);
+    background: #fff;
+    border: 1px solid #c8cdef;
+    border-bottom-width: .25rem;
+    border-radius: .92rem;
+    box-shadow: 0 .28rem 0 #c8cdef, 0 .65rem 1.2rem rgba(38, 44, 93, .1);
+    cursor: pointer;
+    font-weight: 850;
+    line-height: 1.2;
+    text-align: center;
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .btn:hover { transform: translateY(-.14rem); box-shadow: 0 .42rem 0 #c8cdef, 0 .8rem 1.5rem rgba(38,44,93,.15); }
+  .btn:active { transform: translateY(.19rem); box-shadow: 0 .09rem 0 #c8cdef, 0 .35rem .8rem rgba(38,44,93,.11); }
+  .btn.primary { color: #fff; background: linear-gradient(135deg, #776af4, #5141cf); border-color: #3c2ca8; box-shadow: 0 .28rem 0 #3c2ca8, 0 .7rem 1.35rem rgba(72, 55, 190, .28); }
+  .btn.primary:hover { box-shadow: 0 .42rem 0 #3c2ca8, 0 .9rem 1.65rem rgba(72,55,190,.35); }
+  .btn .arrow { font-size: 1.25em; line-height: .7; }
+  .mini-note {
+    display: flex;
+    gap: .7rem;
+    align-items: flex-start;
+    margin-top: 1.5rem;
+    padding: .9rem 1rem;
+    background: rgba(236, 255, 247, .86);
+    border: 1px solid #9de9c3;
+    border-radius: 1rem;
+    color: #15543c;
+    font-size: .94rem;
+  }
+  .mini-note b { color: #0d3b2a; }
+  .mini-note .lock { display: grid; flex: none; width: 1.8rem; height: 1.8rem; place-items: center; background: var(--mint); border-radius: .58rem; }
+
+  .preview { position: relative; min-height: 24rem; perspective: 900px; }
+  .panel-stack { position: absolute; inset: 1rem 0 0 0; transform: rotateY(-5deg) rotateX(2deg); transform-style: preserve-3d; }
+  .back-card, .chat-card {
+    position: absolute;
+    inset: 0;
+    border-radius: 1.25rem;
+    box-shadow: .9rem 1.2rem 2rem rgba(38,46,92,.14);
+  }
+  .back-card { background: linear-gradient(145deg, #bff7f4, #a199fa); transform: translate(.82rem, .86rem) translateZ(-1rem); }
+  .chat-card { overflow: hidden; padding: 1.1rem; background: #fff; border: 1px solid rgba(255,255,255,.96); }
+  .card-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: .8rem; border-bottom: 1px solid var(--line); font-size: .88rem; font-weight: 850; }
+  .members { display: flex; padding-left: .65rem; }
+  .members i { display: block; width: 1.25rem; height: 1.25rem; margin-left: -.65rem; border: 2px solid #fff; border-radius: 50%; }
+  .members i:nth-child(1) { background: var(--gold); } .members i:nth-child(2) { background: var(--cyan); } .members i:nth-child(3) { background: var(--violet); }
+  .fake-message { max-width: 88%; margin-top: .85rem; padding: .63rem .75rem; background: #f0f1f9; border-radius: .75rem .75rem .75rem .18rem; font-size: .84rem; line-height: 1.35; }
+  .fake-message.right { margin-left: auto; color: #fff; background: var(--violet); border-radius: .75rem .75rem .18rem .75rem; }
+  .summary-chip { display: flex; gap: .6rem; align-items: center; margin-top: 1.1rem; padding: .78rem; background: #edfff5; border: 1px solid #a7ecc8; border-radius: .78rem; color: #15543c; font-size: .82rem; font-weight: 800; }
+  .summary-chip b { display: grid; flex: none; width: 1.45rem; height: 1.45rem; place-items: center; color: #fff; background: #1c9a67; border-radius: 50%; }
+  .float-label { position: absolute; right: -1rem; bottom: .7rem; z-index: 2; padding: .65rem .85rem; color: var(--night); background: #fff; border: 1px solid #e3e6f5; border-radius: .8rem; box-shadow: 0 .8rem 1.5rem rgba(30,38,81,.17); font-size: .82rem; font-weight: 850; transform: rotate(4deg); animation: bob 3s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-.42rem) rotate(4deg); } }
+
+  .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; margin: 1.5rem 0 0; }
+  .how-card { padding: .88rem; background: #f7f8ff; border: 1px solid #e3e5f5; border-radius: .9rem; }
+  .how-card b { display: grid; width: 1.75rem; height: 1.75rem; place-items: center; margin-bottom: .45rem; color: #fff; background: var(--violet); border-radius: .55rem; font-size: .83rem; }
+  .how-card span { display: block; font-size: .82rem; line-height: 1.3; font-weight: 750; }
+
+  .form-wrap { max-width: 51rem; }
+  .heading-copy { margin: .75rem 0 1.5rem; color: var(--ink-soft); font-size: 1.12rem; }
+  label { display: block; margin-bottom: .45rem; font-weight: 850; }
+  textarea, input[type="text"] { width: 100%; color: var(--ink); background: #fff; border: 2px solid #c9d1e9; border-radius: .9rem; }
+  textarea { min-height: 11.5rem; padding: .9rem 1rem; resize: vertical; line-height: 1.5; }
+  textarea:focus, input[type="text"]:focus { border-color: var(--violet); box-shadow: 0 0 0 .23rem rgba(102,88,232,.15); outline: none; }
+  .help { margin-top: .5rem; color: var(--ink-soft); font-size: .93rem; }
+  .help::before { content: "ℹ "; color: var(--violet-dark); font-weight: 900; }
+  .message { min-height: 1.75rem; margin: .78rem 0 0; font-weight: 750; }
+  .message.error { color: var(--danger); }
+  .review-zone { margin-top: 1.7rem; padding-top: 1.7rem; border-top: 1px solid var(--line); }
+  .review-top { display: flex; align-items: end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .review-top p { margin: .35rem 0 0; color: var(--ink-soft); }
+  .counter { padding: .42rem .7rem; color: var(--violet-dark); background: var(--lilac); border-radius: 999px; font-size: .88rem; font-weight: 850; }
+  .list { display: grid; gap: .85rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+  .item { position: relative; padding: 1rem; background: #fff; border: 2px solid var(--line); border-radius: 1rem; box-shadow: 0 .38rem .8rem rgba(32,41,85,.05); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+  .item.confirmed { border-color: #55bf91; background: linear-gradient(120deg, #fff, #effff6); }
+  .item.corrected { border-color: #efb647; background: linear-gradient(120deg, #fff, #fff8e9); }
+  .item:focus-within { transform: translateY(-.1rem); box-shadow: 0 .7rem 1.2rem rgba(32,41,85,.1); }
+  .item-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .55rem; margin-bottom: .55rem; }
+  .kind, .state { display: inline-flex; align-items: center; min-height: 1.72rem; padding: .18rem .62rem; border-radius: 999px; font-size: .8rem; font-weight: 850; }
+  .kind { color: #39306d; background: #e8e6ff; }
+  .kind.date { color: #664300; background: #fff1ce; }
+  .state { color: var(--ink-soft); background: #f0f2f8; }
+  .item.confirmed .state { color: #15543c; background: #dff8e9; }
+  .item.corrected .state { color: #764a00; background: #fff0cb; }
+  .item-text { margin: 0 0 .78rem; font-size: 1.08rem; font-weight: 680; }
+  fieldset { margin: 0; padding: 0; border: 0; }
+  legend { padding: 0; color: var(--ink-soft); font-size: .91rem; font-weight: 700; }
+  .choice { display: flex; gap: .65rem; align-items: center; min-height: 2.5rem; cursor: pointer; font-weight: 750; }
+  .choice input { width: 1.35rem; height: 1.35rem; margin: 0; accent-color: var(--violet); }
+  .correction { margin: .45rem 0 0 2rem; }
+  .correction label { font-size: .88rem; }
+  .correction input { padding: .62rem .72rem; }
+
+  .close-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, .46fr); gap: 1.4rem; align-items: start; }
+  .output { min-height: 14rem; margin: 1.2rem 0 0; padding: 1.05rem; overflow: auto; color: #25304e; white-space: pre-wrap; word-break: break-word; background: #f7f8ff; border: 1px solid #dce0f4; border-radius: 1rem; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .88rem; line-height: 1.6; }
+  .schedule { padding: 1.15rem; color: #fff; background: linear-gradient(145deg, #1d2959, #3e368b); border-radius: 1.1rem; box-shadow: .45rem .7rem 1.5rem rgba(40,41,101,.2); }
+  .schedule h3 { margin-bottom: .8rem; }
+  .time { display: flex; gap: .65rem; align-items: center; padding: .75rem; margin: .62rem 0; color: var(--night); background: #fff; border-radius: .75rem; font-weight: 850; }
+  .time b { display: grid; width: 1.8rem; height: 1.8rem; place-items: center; color: #fff; background: var(--violet); border-radius: .55rem; }
+  .schedule small { display: block; margin-top: .9rem; line-height: 1.45; }
+  .board-note { margin: 1rem 0 0; padding: .8rem; color: #543b00; background: #fff7dd; border: 1px solid #f0cf79; border-radius: .78rem; font-size: .94rem; font-weight: 700; }
+  .fine-print { margin: 1.2rem 0 0; color: var(--ink-soft); font-size: .87rem; }
+
+  @media (max-width: 680px) {
+    .top-inner { padding: .67rem .9rem; }
+    .brand { font-size: .93rem; }
+    .offline { font-size: .72rem; }
+    .shell { padding: 1rem .75rem 2rem; }
+    .steps { gap: .28rem; margin-bottom: .85rem; }
+    .steps li { padding: .32rem .2rem; font-size: .73rem; }
+    .steps li::before { width: 1.05rem; height: 1.05rem; }
+    .screen-pad { padding: 1.35rem; }
+    .home-grid, .close-layout { grid-template-columns: 1fr; }
+    .preview { min-height: 19rem; max-width: 23rem; width: calc(100% - .7rem); margin: 0 auto; }
+    .how { grid-template-columns: 1fr; }
+    .actions .btn { width: 100%; }
+    .actions .btn:not(.primary) { width: auto; }
+    .float-label { right: -.5rem; }
+    h1 { max-width: 12ch; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+  /* ===== Pestañas, ruleta, armonía ===== */
+  .tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;max-width:46rem;margin:0 auto 1.1rem}
+  .tab{min-height:2.7rem;padding:.4rem 1.05rem;color:var(--ink-soft);background:rgba(255,255,255,.75);border:1px solid #d3d9ef;border-radius:999px;cursor:pointer;font-weight:850;transition:transform .2s,box-shadow .2s}
+  .tab:hover{transform:translateY(-.14rem)}
+  .tab.active{color:#fff;background:linear-gradient(135deg,#776af4,#5141cf);border-color:#3c2ca8;box-shadow:0 .5rem 1.1rem rgba(72,55,190,.3)}
+  #tools{display:grid;gap:1.1rem}
+  .addrow{display:flex;flex-wrap:wrap;gap:.6rem}.addrow input{flex:1 1 12rem;width:auto;padding:.7rem .9rem}
+  .chips,.presets,.badges,.moods,.mood-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
+  .chip{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .3rem .25rem .75rem;background:#fff;border:2px solid var(--line);border-radius:999px;font-weight:800;animation:pop .4s cubic-bezier(.3,1.6,.5,1) both}
+  .chip button{width:1.7rem;height:1.7rem;color:var(--ink-soft);background:#f0f2f8;border:0;border-radius:50%;cursor:pointer}
+  @keyframes pop{from{opacity:0;transform:scale(.4) rotate(-8deg)}}
+  .pill{padding:.4rem .85rem;color:var(--violet-dark);background:var(--lilac);border:1px solid #d9d4ff;border-radius:999px;cursor:pointer;font-weight:800;font-size:.9rem;transition:transform .15s}
+  .pill:hover{transform:scale(1.07)}.pill:hover,.pill.on{color:#fff;background:var(--violet)}
+  .moods .pill{padding:.25rem .6rem;font-size:1.6rem}
+  select,input[type=number]{padding:.65rem .8rem;color:var(--ink);background:#fff;border:2px solid #c9d1e9;border-radius:.9rem}
+  .r-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr);gap:1.6rem;align-items:center;margin-top:1.2rem}
+  .wheelbox{position:relative;width:100%;max-width:25rem;aspect-ratio:1;margin:auto}
+  .wheelbox canvas{display:block;width:100%;height:100%;filter:drop-shadow(0 1rem 1.4rem rgba(40,40,100,.3))}
+  .idle canvas{animation:idle 28s linear infinite}@keyframes idle{to{transform:rotate(360deg)}}
+  .ptr{position:absolute;z-index:2;top:-.4rem;left:50%;width:2.2rem;height:2.8rem;margin-left:-1.1rem;background:#ff4d6d;clip-path:polygon(50% 100%,0 0,100% 0);transform-origin:50% 8%}
+  .ptr.hit{animation:hit .16s}@keyframes hit{40%{transform:rotate(-24deg)}}
+  .btn.big{width:100%;min-height:4.2rem;margin:.8rem 0;font-size:1.5rem;animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{50%{transform:scale(1.03)}}
+  .log{display:grid;gap:.45rem;margin:.6rem 0 0;padding:0;list-style:none}
+  .log li{padding:.6rem .8rem;background:#f7f8ff;border:1px solid #e3e5f5;border-radius:.8rem;animation:pop .4s both}
+  .ov{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:1rem;color:#fff;background:radial-gradient(circle at 50% 40%,#3b2fa0,#111934 72%);animation:fade .35s both}
+  @keyframes fade{from{opacity:0}}
+  .ov h2{max-width:90vw;font-size:clamp(1.5rem,4.5vw,3rem);text-align:center;text-shadow:0 .2rem 1rem rgba(0,0,0,.4)}
+  .ov .wheelbox{max-width:none;width:min(88vw,calc(100vh - 9rem),56rem);animation:zoom .7s cubic-bezier(.2,1.2,.3,1) both;transition:transform .5s,filter .5s}
+  @keyframes zoom{from{opacity:0;transform:scale(.2) rotate(-200deg)}}
+  .ov.done .wheelbox{transform:scale(.8);filter:blur(5px) brightness(.6)}
+  .ov-x{position:absolute;top:1rem;right:1rem;z-index:5;width:2.8rem;height:2.8rem;color:#fff;background:rgba(255,255,255,.18);border:0;border-radius:50%;font-size:1.2rem;cursor:pointer}
+  .win{position:absolute;z-index:3;top:50%;left:50%;width:min(92vw,28rem);padding:1.6rem;color:var(--ink);text-align:center;background:#fff;border-radius:1.6rem;box-shadow:0 2rem 5rem rgba(0,0,0,.5);transform:translate(-50%,-50%);animation:winin .6s cubic-bezier(.2,1.5,.4,1) both}
+  @keyframes winin{from{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(8deg)}}
+  .win-e{font-size:4.5rem;line-height:1;animation:bob2 1.3s ease-in-out infinite}
+  @keyframes bob2{50%{transform:translateY(-.5rem) rotate(8deg) scale(1.1)}}
+  .win h3{margin:.4rem 0;color:var(--violet-dark);font-size:clamp(2rem,7vw,3rem)}
+  .win .actions{justify-content:center}
+  #conf{position:absolute;inset:0;z-index:4;width:100%;height:100%;pointer-events:none}
+  .wall,.s-out{display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:.8rem;margin-top:1rem}
+  .note{padding:1rem;border-radius:1rem;box-shadow:.2rem .4rem 1rem rgba(40,40,100,.12);animation:pop .5s both}
+  .note:nth-child(4n+1){background:#fff7db}.note:nth-child(4n+2){background:#e8f9ff}.note:nth-child(4n+3){background:#ffe9f3}.note:nth-child(4n){background:#eafff1}
+  .note .big-e{font-size:2.2rem;line-height:1.2}
+  .mood-b{padding:.35rem .8rem;background:#fff;border:2px solid var(--line);border-radius:999px;font-weight:800;animation:pop .4s both}
+  .tip{margin:.8rem 0 0;padding:.7rem .9rem;color:#15543c;background:#edfff5;border:1px solid #a7ecc8;border-radius:.8rem;font-weight:750}
+  .s-card{padding:.9rem;background:#fff;border:2px solid var(--line);border-radius:1rem;font-weight:800;animation:pop .5s both;animation-delay:calc(var(--i)*.12s)}
+  .s-card small{display:block;color:var(--violet-dark)}
+  .pane h3{margin-top:1.4rem}
+  @media(max-width:680px){.r-grid{grid-template-columns:1fr}}
+  .shared-room{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.55rem;align-items:end;margin-top:1rem;padding:1rem;background:#f7f8ff;border:1px solid #dce0f4;border-radius:1rem}
+  .shared-room label{grid-column:1/-1;margin:0}.shared-room input{min-width:0;padding:.7rem .8rem}.room-status{grid-column:1/-1;margin:0;font-size:.88rem;font-weight:750;color:#52617d}
+  .task-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin-top:.8rem}.task-form label{font-size:.9rem}.task-form input,.task-form select{width:100%;min-width:0}.task-form .full{grid-column:1/-1}
+  .task-list{display:grid;gap:.65rem;margin-top:.9rem}.task-card{padding:.85rem;background:#f7f8ff;border:1px solid #dce0f4;border-radius:.85rem}.task-card small{display:block;color:var(--violet-dark);font-weight:800}.task-card p{margin:.25rem 0 0}.empty-state{padding:.8rem;color:var(--ink-soft);background:#f7f8ff;border-radius:.8rem}
+  @media(max-width:520px){.shared-room{grid-template-columns:1fr}.task-form{grid-template-columns:1fr}.task-form .full{grid-column:auto}}
+</style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✓</span><span>Equipo en claro</span></div>
+      <span class="offline">Conecta tu sala para compartir</span>
+    </div>
+  </header>
+
+  <main class="shell">
+    <nav class="tabs" id="tabs" aria-label="Secciones">
+      <button class="tab active" data-tab="acuerdos" type="button" aria-current="page">📋 Acuerdos</button>
+      <button class="tab" data-tab="ruleta" type="button">🎡 Ruleta</button>
+      <button class="tab" data-tab="armonia" type="button">💜 Armonía</button>
+      <button class="tab" data-tab="sorteos" type="button">🎲 Sorteos</button>
+    </nav>
+    <ol class="steps" aria-label="Progreso" id="steps">
+      <li class="active" data-number="1" data-screen="inicio">Inicio</li>
+      <li data-number="2" data-screen="resumen">Resumen</li>
+      <li data-number="3" data-screen="cierre">Cierre</li>
+    </ol>
+
+    <section id="p-inicio" class="screen" aria-labelledby="title-home">
+      <div class="screen-pad">
+        <div class="fictitious" role="note"><span aria-hidden="true">!</span><div><strong>Ejemplo ficticio.</strong> Los mensajes, acuerdos y fechas de esta página están inventados. El resumen es una simulación: no lee ni entiende lo que pegues.</div></div>
+        <div class="home-grid">
+          <div>
+            <p class="eyebrow">Menos mensajes perdidos</p>
+            <h1 id="title-home" tabindex="-1">Acuerdos y fechas del equipo</h1>
+            <p class="lead">Convierte una conversación larga en una lista breve para revisar, corregir y compartir con el grupo.</p>
+            <div class="actions">
+              <button class="btn primary" id="b-resumir" type="button">Resumir acuerdos <span class="arrow" aria-hidden="true">→</span></button>
+              <button class="btn" id="b-tablero" type="button">Ver tablero del equipo</button>
+            </div>
+            <div class="mini-note"><span class="lock" aria-hidden="true">⌁</span><div><b>Trabajo compartido.</b><br>Al conectar una sala, los nombres, estados, mensajes y tareas se guardan en Firebase y los integrantes de esa sala pueden verlos.</div></div>
+          </div>
+          <div class="preview" aria-hidden="true">
+            <div class="panel-stack">
+              <div class="back-card"></div>
+              <div class="chat-card">
+                <div class="card-top"><span>Chat del equipo</span><span class="members"><i></i><i></i><i></i></span></div>
+                <div class="fake-message">¿El borrador queda para el viernes?</div>
+                <div class="fake-message right">Sí, a las 6 p. m. ✓</div>
+                <div class="fake-message">Y las dudas van juntas para el profe.</div>
+                <div class="summary-chip"><b>✓</b><span>2 acuerdos y 1 fecha detectados</span></div>
+              </div>
+            </div>
+            <div class="float-label">✦ Todo claro</div>
+          </div>
+        </div>
+        <div class="how" aria-label="Cómo funciona">
+          <div class="how-card"><b>1</b><span>Pega mensajes del chat.</span></div>
+          <div class="how-card"><b>2</b><span>Revisa cada punto ficticio.</span></div>
+          <div class="how-card"><b>3</b><span>Copia o descarga el resumen.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="p-resumen" class="screen" hidden aria-labelledby="title-summary">
+      <div class="screen-pad form-wrap">
+        <div class="fictitious" role="note"><span aria-hidden="true">!</span><div><strong>Ejemplo ficticio.</strong> El resumen de esta demostración siempre muestra los mismos puntos inventados.</div></div>
+        <p class="eyebrow">Paso 2 · Revisar</p>
+        <h2 id="title-summary" tabindex="-1">Aterriza el chat en acuerdos.</h2>
+        <p class="heading-copy">Pega mensajes sin nombres, correos ni teléfonos. Luego genera un resumen ficticio para practicar cómo se revisa.</p>
+        <label for="chat">Mensajes del chat</label>
+        <textarea id="chat" placeholder="Pega los mensajes aquí. Mejor sin datos personales."></textarea>
+        <p class="help">Esta página no guarda ni envía el texto que pegues.</p>
+        <div class="actions">
+          <button class="btn primary" id="b-generar" type="button">Generar resumen <span class="arrow" aria-hidden="true">→</span></button>
+          <button class="btn" id="b-ejemplo" type="button">Usar chat de ejemplo (ficticio)</button>
+        </div>
+        <p id="msg-resumen" class="message" role="status" aria-live="polite"></p>
+
+        <div class="review-zone" id="lista-zona" hidden>
+          <div class="review-top">
+            <div>
+              <h3 id="h-lista" tabindex="-1">Revisa los puntos ficticios</h3>
+              <p>Confirma o corrige cada uno. El símbolo y el texto indican su estado.</p>
+            </div>
+            <p class="counter" id="cuenta" role="status"></p>
+          </div>
+          <ul class="list" id="lista"></ul>
+          <div class="actions">
+            <button class="btn primary" id="b-cierre" type="button">Continuar al cierre <span class="arrow" aria-hidden="true">→</span></button>
+            <button class="btn" id="b-volver1" type="button">← Volver al inicio</button>
+          </div>
+          <p id="msg-cierre" class="message error" role="status" aria-live="polite"></p>
+        </div>
+        <div class="actions" id="solo-volver"><button class="btn" id="b-volver0" type="button">← Volver al inicio</button></div>
+      </div>
+    </section>
+
+    <section id="p-cierre" class="screen" hidden aria-labelledby="title-close">
+      <div class="screen-pad">
+        <div class="fictitious" role="note"><span aria-hidden="true">!</span><div><strong>Ejemplo ficticio.</strong> Los datos de este resumen son inventados.</div></div>
+        <p class="eyebrow">Paso 3 · Compartir</p>
+        <h2 id="title-close" tabindex="-1">Resumen confirmado.</h2>
+        <p class="heading-copy">Tu equipo ya tiene una versión breve para compartir y volver a consultar.</p>
+        <p id="nota-tablero" class="board-note" hidden>ℹ Aún no confirmaste puntos; este es un tablero de ejemplo con datos ficticios.</p>
+        <div class="close-layout">
+          <div>
+            <pre class="output" id="salida"></pre>
+            <div class="actions">
+              <button class="btn primary" id="b-copiar" type="button">Copiar texto</button>
+              <button class="btn" id="b-descargar" type="button">Descargar .txt</button>
+            </div>
+            <p id="aviso-copia" class="message" role="status" aria-live="polite"></p>
+          </div>
+          <aside class="schedule" aria-label="Horario de revisión sugerido">
+            <h3>Ritmo sugerido</h3>
+            <div class="time"><b aria-hidden="true">☀</b><span>8:00 a. m.</span></div>
+            <div class="time"><b aria-hidden="true">◐</b><span>6:00 p. m.</span></div>
+            <small>Revisa el chat en estos dos momentos. No hace falta responder de inmediato: lee con calma y responde cuando estés listo.</small>
+          </aside>
+        </div>
+        <div class="actions">
+          <button class="btn" id="b-revisar" type="button">← Volver a revisar</button>
+          <button class="btn" id="b-inicio" type="button">Ir al inicio</button>
+        </div>
+        <p class="fine-print">Los datos compartidos se guardan en Firebase. Desconecta o deja de usar la sala cuando termine el trabajo.</p>
+      </div>
+    </section>
+    <div id="tools" hidden>
+      <section class="screen" id="team"><div class="screen-pad">
+        <p class="eyebrow">Integrantes del equipo</p>
+        <div class="addrow"><input type="text" id="n-in" aria-label="Nombre del integrante" placeholder="Escribe un nombre y pulsa Enter" maxlength="24"><button class="btn primary" id="n-add" type="button">Añadir ➕</button><button class="btn" id="n-demo" type="button">Cargar ejemplo</button></div>
+        <div class="chips" id="chips"></div>
+        <p class="help" id="n-msg" role="status">Conecta una sala para compartir integrantes y actividades con tu equipo.</p>
+        <div class="shared-room">
+          <label for="room-code">Código de sala (todos deben escribir el mismo)</label>
+          <input type="text" id="room-code" maxlength="24" placeholder="Ejemplo: equipo2026" autocomplete="off">
+          <button class="btn primary" id="room-connect" type="button">Conectar sala</button>
+          <p class="room-status" id="room-status" role="status">Sin conectar. Tus cambios todavía no se comparten.</p>
+        </div>
+      </div></section>
+
+      <section class="screen pane" id="t-ruleta" hidden><div class="screen-pad">
+        <p class="eyebrow">Ruleta del destino</p>
+        <h2>¿A quién le toca?</h2>
+        <p class="heading-copy">Ponle título a la ruleta, gira y que decida la suerte 🍀</p>
+        <label for="r-title">Título de la ruleta</label>
+        <input type="text" id="r-title" value="¿Quién expone la introducción?" maxlength="60">
+        <div class="presets" id="presets" aria-label="Títulos rápidos"></div>
+        <div class="r-grid">
+          <div class="wheelbox idle"><div class="ptr"></div><canvas id="c-small" width="400" height="400" aria-label="Vista previa de la ruleta"></canvas></div>
+          <div>
+            <button class="btn primary big" id="r-spin" type="button">🎡 ¡GIRAR!</button>
+            <label class="choice"><input type="checkbox" id="r-norep" checked><span>No repetir: quien sale descansa de la ruleta</span></label>
+            <label class="choice"><input type="checkbox" id="r-snd" checked><span>🔊 Sonido de la ruleta</span></label>
+            <p class="message" id="r-msg" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+        <h3>📝 Reparto del trabajo</h3>
+        <ul class="log" id="log"></ul>
+        <div class="actions"><button class="btn" id="r-copy" type="button">Copiar reparto</button><button class="btn" id="r-reset" type="button">↺ Reiniciar</button></div>
+      </div></section>
+
+      <section class="screen pane" id="t-armonia" hidden><div class="screen-pad">
+        <p class="eyebrow">Armonía del equipo</p>
+        <h2>Buena onda, buen equipo 💜</h2>
+        <h3>📌 Dashboard de tareas</h3>
+        <p class="help">Registra qué le toca a cada integrante, para qué trabajo y en qué fecha. Todos los conectados a la misma sala verán los cambios.</p>
+        <div class="task-form">
+          <label>Integrante<select id="task-who"></select></label>
+          <label>Fecha<input type="date" id="task-date"></label>
+          <label class="full">Trabajo o actividad<input type="text" id="task-work" maxlength="100" placeholder="Ej. Investigación del capítulo 2"></label>
+          <button class="btn primary full" id="task-add" type="button">Guardar tarea</button>
+        </div>
+        <div class="task-list" id="task-list"><div class="empty-state">Todavía no hay tareas registradas.</div></div>
+        <h3>🌡️ ¿Cómo llegamos hoy?</h3>
+        <div class="addrow"><select id="m-who" aria-label="Integrante"></select></div>
+        <div class="moods" id="moods" aria-label="Elige un estado de ánimo"></div>
+        <div class="mood-row" id="mood-row"></div>
+        <p class="tip" id="tip" hidden></p>
+        <h3>💌 Muro de aprecio</h3>
+        <div class="addrow"><select id="k-who" aria-label="Para quién"></select><input type="text" id="k-msg" aria-label="Mensaje" placeholder="Mensaje corto (opcional)" maxlength="80"></div>
+        <div class="badges" id="badges" aria-label="Insignia"></div>
+        <div class="actions"><button class="btn primary" id="k-send" type="button">Enviar 💌</button></div>
+        <p class="message" id="k-msgs" role="status"></p>
+        <div class="wall" id="wall"></div>
+        <h3>🎯 Reto de armonía</h3>
+        <div class="actions"><button class="btn" id="reto-b" type="button">Dame un reto 🎁</button></div>
+        <p class="tip" id="reto" hidden></p>
+      </div></section>
+
+      <section class="screen pane" id="t-sorteos" hidden><div class="screen-pad">
+        <p class="eyebrow">Más sorteos</p>
+        <h2>El azar organiza por ti 🎲</h2>
+        <div class="actions">
+          <button class="btn primary" id="s-orden" type="button">🎤 Orden de exposición</button>
+          <button class="btn" id="s-roles" type="button">🧩 Roles del equipo</button>
+          <button class="btn" id="s-grupos" type="button">👥 Formar grupos</button>
+          <input type="number" id="s-g" min="2" max="8" value="2" aria-label="Número de grupos" style="width:5rem">
+        </div>
+        <p class="message" id="s-msg" role="status"></p>
+        <div class="s-out" id="s-out"></div>
+      </div></section>
+    </div>
+
+    <div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="ov-title" hidden>
+      <button class="ov-x" id="ov-x" type="button" aria-label="Cerrar">✕</button>
+      <h2 id="ov-title"></h2>
+      <div class="wheelbox"><div class="ptr" id="ptr"></div><canvas id="c-big"></canvas></div>
+      <div class="win" id="win" hidden>
+        <div class="win-e" id="w-e"></div><h3 id="w-n"></h3><p id="w-p"></p>
+        <div class="actions"><button class="btn primary" id="w-ok" type="button">✔ Aceptar</button><button class="btn" id="w-again" type="button">↻ Girar otra vez</button></div>
+      </div>
+      <canvas id="conf" aria-hidden="true"></canvas>
+    </div>
+  </main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getDatabase, ref, set, push, onValue, off } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBhiXcVVH-ZlG_i1iLRIP-vhPK5yflPsEw",
+  authDomain: "trabajoarmonia-f7e9e.firebaseapp.com",
+  databaseURL: "https://trabajoarmonia-f7e9e-default-rtdb.firebaseio.com",
+  projectId: "trabajoarmonia-f7e9e",
+  storageBucket: "trabajoarmonia-f7e9e.firebasestorage.app",
+  messagingSenderId: "28148283610",
+  appId: "1:28148283610:web:ac2e70d4e628cdddd10de3"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const database = getDatabase(firebaseApp);
+
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const screens = ['inicio', 'resumen', 'cierre'];
+  const exampleMessages = [
+    'Mensaje 1: Propongo dividir el informe en 4 partes, una por persona.',
+    'Mensaje 2: Dale. Mejor escribir todo en un solo documento compartido.',
+    'Mensaje 3: El borrador debería estar listo el viernes a las 6 p. m.',
+    'Mensaje 4: Hagamos una reunión corta el lunes a las 4 p. m.',
+    'Mensaje 5: Las dudas para el profe las mandamos en un solo mensaje.',
+    'Mensaje 6: Y la entrega final es el miércoles antes del mediodía.'
+  ].join('\n');
+  const baseItems = [
+    { type: 'agreement', text: 'Dividir el informe en cuatro partes, una por integrante.' },
+    { type: 'date', text: 'Borrador listo el viernes a las 6:00 p. m.' },
+    { type: 'agreement', text: 'Escribir todo en un solo documento compartido.' },
+    { type: 'date', text: 'Reunión de 20 minutos el lunes a las 4:00 p. m.' },
+    { type: 'agreement', text: 'Enviar las dudas para el profesor en un solo mensaje.' },
+    { type: 'date', text: 'Entrega final el miércoles antes del mediodía.' }
+  ];
+  let items = [];
+
+  function make(tag, className, content) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (content !== undefined) node.textContent = content;
+    return node;
+  }
+
+  function goTo(name) {
+    screens.forEach((screen) => {
+      const section = $('p-' + screen);
+      section.hidden = screen !== name;
+      section.classList.remove('enter');
+    });
+    const active = $('p-' + name);
+    active.classList.add('enter');
+    active.addEventListener('animationend', () => active.classList.remove('enter'), { once: true });
+    document.querySelectorAll('#steps li').forEach((step) => {
+      step.classList.toggle('active', step.dataset.screen === name);
+    });
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    const heading = active.querySelector('h1, h2');
+    setTimeout(() => heading.focus(), 50);
+  }
+
+  function updateCounter() {
+    const reviewed = items.filter((item) => item.status !== 'pending').length;
+    $('cuenta').textContent = 'Revisados: ' + reviewed + ' de ' + items.length;
+  }
+
+  function checkControl(text) {
+    const label = make('label', 'choice');
+    const input = make('input');
+    input.type = 'checkbox';
+    label.append(input, make('span', '', text));
+    return { label, input };
+  }
+
+  function createItem(item, index) {
+    const li = make('li', 'item');
+    const head = make('div', 'item-head');
+    const kind = make('span', 'kind ' + (item.type === 'date' ? 'date' : ''), item.type === 'agreement' ? '● Acuerdo' : '◆ Fecha');
+    const state = make('span', 'state');
+    const text = make('p', 'item-text', item.text);
+    const fieldset = make('fieldset');
+    const legend = make('legend', '', '¿Cómo está este punto?');
+    const confirm = checkControl('✔ Confirmar: está bien');
+    const correct = checkControl('✎ Corregir este punto');
+    const correction = make('div', 'correction');
+    const correctionLabel = make('label', '', 'Versión corregida');
+    const input = make('input');
+    input.type = 'text';
+    input.id = 'correction-' + index;
+    input.maxLength = 200;
+    input.value = item.text;
+    correctionLabel.htmlFor = input.id;
+    correction.append(correctionLabel, input);
+    head.append(kind, state);
+    fieldset.append(legend, confirm.label, correct.label, correction);
+    li.append(head, text, fieldset);
+
+    const labels = {
+      pending: '○ Sin revisar',
+      confirmed: '✔ Confirmado',
+      corrected: '✎ Corregido'
+    };
+    function paint() {
+      li.className = 'item ' + item.status;
+      state.textContent = labels[item.status];
+      confirm.input.checked = item.status === 'confirmed';
+      correct.input.checked = item.status === 'corrected';
+      correction.hidden = item.status !== 'corrected';
+      updateCounter();
+    }
+    confirm.input.addEventListener('change', () => {
+      item.status = confirm.input.checked ? 'confirmed' : 'pending';
+      paint();
+    });
+    correct.input.addEventListener('change', () => {
+      item.status = correct.input.checked ? 'corrected' : 'pending';
+      paint();
+      if (correct.input.checked) input.focus();
+    });
+    input.addEventListener('input', () => {
+      item.text = input.value;
+      text.textContent = input.value || '(vacío)';
+    });
+    paint();
+    return li;
+  }
+
+  function generate() {
+    const message = $('msg-resumen');
+    if (!$('chat').value.trim()) {
+      message.className = 'message error';
+      message.textContent = '✖ Falta texto. Pega mensajes o usa el chat ficticio.';
+      $('chat').focus();
+      return;
+    }
+    message.className = 'message';
+    message.textContent = '✔ Resumen ficticio generado. No analiza el texto que pegaste.';
+    items = baseItems.map((item) => ({ type: item.type, text: item.text, status: 'pending' }));
+    const list = $('lista');
+    list.replaceChildren();
+    items.forEach((item, index) => list.append(createItem(item, index)));
+    $('msg-cierre').textContent = '';
+    $('lista-zona').hidden = false;
+    $('solo-volver').hidden = true;
+    $('h-lista').focus();
+  }
+
+  function reviewedItems() {
+    return items.filter((item) => item.status !== 'pending' && item.text.trim());
+  }
+
+  function buildText(list) {
+    const lines = [
+      'ACUERDOS Y FECHAS DEL EQUIPO',
+      'EJEMPLO FICTICIO: datos inventados, resumen simulado.',
+      ''
+    ];
+    function section(type, title, empty) {
+      lines.push(title);
+      const matching = list.filter((item) => item.type === type);
+      if (!matching.length) lines.push('  (' + empty + ')');
+      matching.forEach((item) => lines.push('  - ' + item.text.trim() + (item.status === 'corrected' ? ' (corregido)' : '')));
+      lines.push('');
+    }
+    section('agreement', 'Acuerdos:', 'ninguno confirmado');
+    section('date', 'Fechas clave:', 'ninguna confirmada');
+    lines.push('Horario de revisión sugerido: 8:00 a. m. y 6:00 p. m.');
+    lines.push('Sin responder de inmediato: leer el chat en esos dos momentos y responder con calma.');
+    return lines.join('\n');
+  }
+
+  function showClose(list, isBoard) {
+    $('nota-tablero').hidden = !isBoard;
+    $('salida').textContent = buildText(list);
+    $('aviso-copia').textContent = '';
+    goTo('cierre');
+  }
+
+  function copyNotice(text, isError) {
+    const notice = $('aviso-copia');
+    notice.className = 'message' + (isError ? ' error' : '');
+    notice.textContent = text;
+  }
+
+  function fallbackCopy(text) {
+    const textarea = make('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.append(textarea);
+    textarea.select();
+    let successful = false;
+    try { successful = document.execCommand('copy'); } catch (error) {}
+    textarea.remove();
+    copyNotice(successful ? '✔ Texto copiado.' : '✖ No se pudo copiar. Selecciona el texto y cópialo a mano.', !successful);
+  }
+
+  function copyText() {
+    const text = $('salida').textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        () => copyNotice('✔ Texto copiado.'),
+        () => fallbackCopy(text)
+      );
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function downloadText() {
+    try {
+      const blob = new Blob(['\uFEFF' + $('salida').textContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = make('a');
+      link.href = url;
+      link.download = 'acuerdos-y-fechas-ejemplo.txt';
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      copyNotice('✔ Archivo preparado: revisa tus descargas.');
+    } catch (error) {
+      copyNotice('✖ No se pudo descargar. Usa “Copiar texto”.', true);
+    }
+  }
+
+  $('b-resumir').addEventListener('click', () => goTo('resumen'));
+  $('b-tablero').addEventListener('click', () => {
+    const reviewed = reviewedItems();
+    if (reviewed.length) showClose(reviewed, false);
+    else showClose(baseItems.map((item) => ({ type: item.type, text: item.text, status: 'confirmed' })), true);
+  });
+  $('b-ejemplo').addEventListener('click', () => {
+    $('chat').value = exampleMessages;
+    $('msg-resumen').className = 'message';
+    $('msg-resumen').textContent = 'ℹ Chat de ejemplo cargado (inventado). Ahora genera el resumen.';
+    $('chat').focus();
+  });
+  $('b-generar').addEventListener('click', generate);
+  $('b-cierre').addEventListener('click', () => {
+    const reviewed = reviewedItems();
+    if (!reviewed.length) {
+      $('msg-cierre').textContent = '✖ Revisa al menos un punto antes de continuar.';
+      return;
+    }
+    $('msg-cierre').textContent = '';
+    showClose(reviewed, false);
+  });
+  ['b-volver0', 'b-volver1', 'b-inicio'].forEach((id) => $(id).addEventListener('click', () => goTo('inicio')));
+  $('b-revisar').addEventListener('click', () => goTo('resumen'));
+  $('b-copiar').addEventListener('click', copyText);
+  $('b-descargar').addEventListener('click', downloadText);
+  /* ===== Pestañas, ruleta y armonía ===== */
+  const TAU = Math.PI * 2, rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const AVA = ['🦊','🐼','🦄','🐯','🐸','🦉','🐙','🦋','🐧','🐢','🦁','🐬','🐰','🦖','🐝','🌵'];
+  const COLORS = ['#6658e8','#1fb5bf','#f08a4b','#e0509a','#2fa56a','#e6a521','#4f7cff','#9b5de5'];
+  const PH = ['¡{n}, te tocó lo más fácil! 😎 (o eso crees…)','{n}, el destino habló: ¡a brillar! ✨','Respira, {n}. Tú puedes con esto 💪','{n} salió elegido/a. El equipo confía en ti 🤝','¡Premio gordo, {n}! 🎉 La parte más épica es tuya','Tranquilo/a {n}, no muerde… mucho 🐊','{n}, hoy naciste para esto 🚀','La ruleta no se equivoca, {n}. ¡Con calma y buena onda! 🌈','{n}, ¡toca lucirse! El grupo te aplaude 👏','Nivel de dificultad: fácil. Nivel de tu talento: legendario, {n} 🏆','{n}, si tienes dudas, el equipo te respalda 💜','¡Bingo, {n}! Y si sale mal, la culpa es de la ruleta 😂'];
+  const EM = ['🎉','🏆','🚀','😎','🌟','🔥','🦄','🎯'];
+  const PRE = ['Introducción','Desarrollo','Conclusión','Diapositivas','Preguntas del público','Cronómetro','Investigar','Resumen final'];
+  const MOODS = [['😄','Con toda la energía'],['😌','En calma'],['🤔','Con dudas'],['😴','Cansado/a'],['🔥','Motivado/a'],['😟','Estresado/a']];
+  const BADGES = [['🌟','Brillaste'],['🤝','Gran apoyo'],['💡','Buenas ideas'],['😂','Buen humor'],['🧘','Calma total'],['⚡','Mucha energía']];
+  const RETOS = ['Dile a alguien del equipo algo que admires de su forma de trabajar.','Hoy nadie interrumpe: uno habla y los demás escuchan 🎧','Agradece en voz alta una ayuda que recibiste esta semana.','Propón una idea y pide que otro la mejore, no que la juzgue.','Cierra la reunión con una palabra que describa cómo te sientes.','Hagan un minuto de respiración en silencio antes de empezar 🧘','Elige a alguien y pregúntale: ¿en qué te puedo ayudar?'];
+  const ROLES = ['🧭 Líder','🎙️ Portavoz','📝 Secretario/a','⏱️ Cronometrista','🎨 Diseño','🔍 Revisor/a'];
+  let members = [], cur = 0, token = 0, pending = null, audio = null, confRaf = 0, lastAc = 'inicio', badge = 0;
+  try { members = JSON.parse(localStorage.getItem('eq-members') || '[]'); } catch (e) {}
+  if (!Array.isArray(members)) members = [];
+  members = members.filter((m) => typeof m === 'string').slice(0, 16);
+  const done = new Set(), log = [];
+  let moods = {}, wallEntries = {}, taskEntries = {}, roomCode = '', roomListener = null;
+  const rnd = (n) => crypto.getRandomValues(new Uint32Array(1))[0] % n;
+  const roomPath = (child) => `rooms/${roomCode}/${child}`;
+  const writeRoom = (child, value) => { if (!roomCode) return; set(ref(database, roomPath(child)), value).catch((err) => say('room-status', 'Error al guardar: ' + err.message)); };
+  const addRoomEntry = (child, value) => { if (!roomCode) { say('room-status', 'Conecta primero una sala para compartir.'); return; } push(ref(database, roomPath(child)), value).catch((err) => say('room-status', 'Error al guardar: ' + err.message)); };
+  function renderWall() {
+    const wall = $('wall'); wall.replaceChildren();
+    const entries = Object.entries(wallEntries || {}).sort((a,b) => (b[1].createdAt||0)-(a[1].createdAt||0));
+    if (!entries.length) { wall.append(make('div','empty-state','Todavía no hay mensajes de aprecio.')); return; }
+    entries.forEach(([id, item]) => { const note=make('div','note'); note.append(make('div','big-e',item.emoji||'💜'),make('b','','Para '+avatar(item.who||'')+' '+(item.who||'Equipo')),make('p','',(item.badge||'Mensaje')+(item.message?': '+item.message:''))); wall.append(note); });
+  }
+  function renderTasks() {
+    const box=$('task-list'); if(!box) return; box.replaceChildren();
+    const entries=Object.entries(taskEntries||{}).sort((a,b)=>(a[1].date||'').localeCompare(b[1].date||''));
+    if(!entries.length){box.append(make('div','empty-state','Todavía no hay tareas registradas.'));return;}
+    entries.forEach(([id,item])=>{const card=make('div','task-card');card.append(make('small','',`${item.date||'Sin fecha'} · ${item.who||'Sin asignar'}`),make('p','',item.work||'Actividad'));box.append(card);});
+  }
+  function connectRoom() {
+    const code=$('room-code').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
+    if(code.length<4){say('room-status','Escribe un código de al menos 4 caracteres.');return;}
+    if(roomListener) off(roomListener);
+    roomCode=code; localStorage.setItem('eq-room',code);
+    roomListener=ref(database,`rooms/${roomCode}`);
+    say('room-status','Conectando…');
+    onValue(roomListener,(snap)=>{
+      const data=snap.val()||{};
+      if(data.members) members=Array.isArray(data.members)?data.members:Object.values(data.members); else if(members.length) writeRoom('members',members); else members=[];
+      moods=data.moods||{}; wallEntries=data.wall||{}; taskEntries=data.tasks||{};
+      renderMembers(); drawSmall(); renderMoods(); renderWall(); renderTasks();
+      $('task-who').replaceChildren(); members.forEach(n=>{const o=make('option','',n);o.value=n;$('task-who').append(o);});
+      say('room-status','✓ Conectado a la sala «'+roomCode+'». Los cambios se comparten en tiempo real.');
+      say('n-msg','Integrantes compartidos con la sala.');
+    },(err)=>say('room-status','No se pudo conectar: '+err.message));
+  }
+  const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const avatar = (n) => AVA[[...n].reduce((s, c) => s + c.charCodeAt(0), 0) % AVA.length];
+  const say = (id, t) => { $(id).textContent = t; };
+  const wheelNames = () => $('r-norep').checked ? members.filter((n) => !done.has(n)) : members.slice();
+  const idxAt = (ang, n) => Math.floor((((-Math.PI / 2 - ang) % TAU) + TAU) % TAU / (TAU / n)) % n;
+
+  function showTab(t) {
+    const ac = t === 'acuerdos';
+    if ($('tools').hidden && !ac) lastAc = screens.find((s) => !$('p-' + s).hidden) || 'inicio';
+    document.querySelectorAll('.tab').forEach((b) => {
+      const on = b.dataset.tab === t;
+      b.classList.toggle('active', on);
+      if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+    $('steps').hidden = !ac; $('tools').hidden = ac;
+    if (ac) { goTo(lastAc); return; }
+    screens.forEach((s) => { $('p-' + s).hidden = true; });
+    document.querySelectorAll('.pane').forEach((p) => { p.hidden = p.id !== 't-' + t; });
+    const pane = $('t-' + t);
+    pane.classList.remove('enter'); void pane.offsetWidth; pane.classList.add('enter');
+    window.scrollTo({ top: 0, behavior: rm ? 'auto' : 'smooth' });
+  }
+
+  function draw(cv, ang, list) {
+    const s = cv.width, c = s / 2, r = c - s * .03, x = cv.getContext('2d'), n = list.length;
+    x.clearRect(0, 0, s, s);
+    if (!n) {
+      x.fillStyle = '#e9ecfa'; x.beginPath(); x.arc(c, c, r, 0, TAU); x.fill();
+      x.fillStyle = '#52617d'; x.font = 'bold ' + s * .055 + 'px sans-serif'; x.textAlign = 'center'; x.fillText('Añade nombres', c, c);
+      return;
+    }
+    const g = TAU / n;
+    x.lineWidth = s * .006; x.strokeStyle = '#fff';
+    list.forEach((name, i) => {
+      x.beginPath(); x.moveTo(c, c); x.arc(c, c, r, ang + i * g, ang + (i + 1) * g); x.closePath();
+      x.fillStyle = COLORS[(i === n - 1 && n > 1 && i % 8 === 0) ? 3 : i % 8]; x.fill(); x.stroke();
+      x.save(); x.translate(c, c); x.rotate(ang + (i + .5) * g);
+      x.textAlign = 'right'; x.textBaseline = 'middle'; x.fillStyle = '#fff';
+      x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = s * .006;
+      x.font = '800 ' + Math.max(s * .03, Math.min(s * .065, r * g * .42)) + 'px Inter,system-ui,sans-serif';
+      x.fillText(avatar(name) + ' ' + (name.length > 12 ? name.slice(0, 11) + '…' : name), r * .92, 0);
+      x.restore();
+    });
+    x.lineWidth = s * .02; x.strokeStyle = '#fff'; x.beginPath(); x.arc(c, c, r, 0, TAU); x.stroke();
+    x.fillStyle = '#fff'; x.beginPath(); x.arc(c, c, s * .07, 0, TAU); x.fill();
+    x.font = s * .07 + 'px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('✨', c, c + s * .005);
+  }
+  const drawSmall = () => draw($('c-small'), 0, wheelNames());
+
+  function tick() {
+    const p = $('ptr'); p.classList.remove('hit'); void p.offsetWidth; p.classList.add('hit');
+    if (!$('r-snd').checked) return;
+    try {
+      audio = audio || new AudioContext();
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.frequency.value = 650 + rnd(120); g.gain.value = .04;
+      o.connect(g); g.connect(audio.destination); o.start(); o.stop(audio.currentTime + .03);
+    } catch (e) {}
+  }
+
+  function stopConf() { cancelAnimationFrame(confRaf); const c = $('conf'); c.getContext('2d').clearRect(0, 0, c.width, c.height); }
+  function confetti() {
+    stopConf();
+    const c = $('conf'); c.width = innerWidth; c.height = innerHeight;
+    const x = c.getContext('2d'), t0 = performance.now();
+    const ps = Array.from({ length: 160 }, () => ({ x: innerWidth / 2, y: innerHeight / 2, vx: (Math.random() - .5) * 18, vy: -Math.random() * 16 - 4, r: Math.random() * 6 + 4, c: COLORS[rnd(8)], a: Math.random() * TAU, va: (Math.random() - .5) * .4 }));
+    (function f(t) {
+      const el = t - t0; x.clearRect(0, 0, c.width, c.height);
+      ps.forEach((p) => {
+        p.vy += .35; p.x += p.vx; p.y += p.vy; p.a += p.va;
+        x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.globalAlpha = Math.max(0, 1 - el / 3800);
+        x.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); x.restore();
+      });
+      if (el < 3800) confRaf = requestAnimationFrame(f);
+    })(t0);
+  }
+
+  function spin() {
+    if (members.length < 2) { say('r-msg', 'Añade al menos 2 integrantes arriba 👆'); return; }
+    const names = wheelNames();
+    if (!names.length) { say('r-msg', '¡Todos ya tienen su parte! Pulsa “Reiniciar” 🎊'); return; }
+    say('r-msg', ''); stopConf(); pending = null;
+    const ov = $('ov'); ov.hidden = false; ov.classList.remove('done'); $('win').hidden = true;
+    $('ov-title').textContent = $('r-title').value.trim() || '¡La ruleta decide!';
+    const cv = $('c-big'), d = Math.min(devicePixelRatio || 1, 2);
+    cv.width = cv.height = Math.round(cv.parentElement.clientWidth * d);
+    draw(cv, cur, names); $('ov-x').focus();
+    const my = ++token, w = rnd(names.length), g = TAU / names.length, from = cur;
+    const target = -Math.PI / 2 - (w + .15 + Math.random() * .7) * g;
+    const delta = (((target - cur) % TAU) + TAU) % TAU + TAU * (6 + rnd(3));
+    const dur = rm ? 1200 : 6500;
+    let last = idxAt(cur, names.length), t0 = null;
+    setTimeout(() => requestAnimationFrame(function f(t) {
+      if (my !== token) return;
+      if (t0 === null) t0 = t;
+      const p = Math.min(1, (t - t0) / dur);
+      cur = from + delta * (1 - Math.pow(1 - p, 4));
+      draw(cv, cur, names);
+      const i = idxAt(cur, names.length);
+      if (i !== last) { last = i; tick(); }
+      if (p < 1) requestAnimationFrame(f); else finish(names[w]);
+    }), rm ? 0 : 700);
+  }
+
+  function finish(name) {
+    pending = name; $('ov').classList.add('done');
+    $('w-e').textContent = EM[rnd(EM.length)];
+    $('w-n').textContent = avatar(name) + ' ' + name;
+    $('w-p').textContent = PH[rnd(PH.length)].replace(/\{n\}/g, () => name);
+    $('win').hidden = false; $('w-ok').focus();
+    if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
+    if (!rm) confetti();
+  }
+
+  function closeOv(accept) {
+    token++;
+    if (accept && pending) {
+      log.push({ t: $('r-title').value.trim() || 'Sin título', n: pending });
+      addRoomEntry('tasks',{who:pending,work:$('r-title').value.trim()||'Asignación de ruleta',date:localToday(),createdAt:Date.now(),source:'Ruleta'});
+      if ($('r-norep').checked) done.add(pending);
+      renderLog();
+    }
+    pending = null; $('ov').hidden = true; stopConf(); drawSmall(); $('r-spin').focus();
+  }
+
+  function renderLog() {
+    const ul = $('log'); ul.replaceChildren();
+    if (!log.length) ul.append(make('li', 'muted', 'Aún no hay reparto. ¡Gira la ruleta!'));
+    log.forEach((e) => { const li = make('li'); li.append('🎯 ' + e.t + ' → ', make('b', '', avatar(e.n) + ' ' + e.n)); ul.append(li); });
+  }
+
+  function fillSelects() {
+    ['m-who', 'k-who'].forEach((id) => {
+      const s = $(id), v = s.value; s.replaceChildren();
+      members.forEach((n) => { const o = make('option', '', avatar(n) + ' ' + n); o.value = n; s.append(o); });
+      if (members.includes(v)) s.value = v;
+    });
+  }
+
+  function renderMembers() {
+    const box = $('chips'); box.replaceChildren();
+    if (!members.length) box.append(make('span', 'muted', 'Aún no hay nadie. ¡Añade a tu equipo! 👆'));
+    members.forEach((n, i) => {
+      const chip = make('span', 'chip', avatar(n) + ' ' + n), b = make('button', '', '×');
+      b.type = 'button'; b.setAttribute('aria-label', 'Quitar a ' + n);
+      b.addEventListener('click', () => { members.splice(i, 1); done.delete(n); delete moods[n]; refresh(); writeRoom('moods',moods); });
+      chip.append(b); box.append(chip);
+    });
+    fillSelects();
+  }
+
+  function refresh() {
+    try { localStorage.setItem('eq-members', JSON.stringify(members)); } catch (e) {}
+    renderMembers(); drawSmall(); renderMoods(); writeRoom('members',members);
+  }
+
+  function addMember() {
+    const v = $('n-in').value.trim();
+    if (!v) return;
+    if (members.length >= 16) { say('n-msg', '✖ Máximo 16 integrantes.'); return; }
+    if (members.some((m) => m.toLowerCase() === v.toLowerCase())) { say('n-msg', '✖ Ese nombre ya está en la lista.'); return; }
+    members.push(v); $('n-in').value = ''; say('n-msg', '✔ ' + v + ' se unió al equipo.'); refresh(); $('n-in').focus();
+  }
+
+  function renderMoods() {
+    const row = $('mood-row'), tip = $('tip'); row.replaceChildren();
+    const entries = Object.entries(moods);
+    entries.forEach(([n, e]) => row.append(make('span', 'mood-b', avatar(n) + ' ' + n + ' ' + e)));
+    const vals = entries.map((x) => x[1]);
+    tip.hidden = !vals.length;
+    if (vals.includes('😟') || vals.includes('😴')) tip.textContent = '💛 Hay quien llega con poca energía: repartan con calma y ayúdense.';
+    else if (vals.includes('🤔')) tip.textContent = '🤝 Hay dudas: resuélvanlas juntos antes de empezar.';
+    else tip.textContent = '🌈 ¡Buen ambiente! Aprovechen esa energía.';
+  }
+
+  function sorteo(items) {
+    const box = $('s-out'); box.replaceChildren();
+    items.forEach(([label, text], i) => {
+      const d = make('div', 's-card'); d.style.setProperty('--i', i);
+      d.append(make('small', '', label), text); box.append(d);
+    });
+  }
+  function needTeam() { if (members.length < 2) { say('s-msg', 'Añade al menos 2 integrantes arriba 👆'); return true; } say('s-msg', ''); return false; }
+
+  document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
+  $('n-add').addEventListener('click', addMember);
+  $('n-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addMember(); } });
+  $('n-demo').addEventListener('click', () => { members = ['Ana', 'Luis', 'Sofía', 'Diego', 'Valeria']; say('n-msg', 'ℹ Nombres de ejemplo cargados. Bórralos y pon los de tu equipo.'); refresh(); });
+  PRE.forEach((p) => { const b = make('button', 'pill', p); b.type = 'button'; b.addEventListener('click', () => { $('r-title').value = '¿Quién se encarga de: ' + p + '?'; }); $('presets').append(b); });
+  $('r-norep').addEventListener('change', drawSmall);
+  $('r-spin').addEventListener('click', spin);
+  $('w-ok').addEventListener('click', () => closeOv(true));
+  $('w-again').addEventListener('click', spin);
+  $('ov-x').addEventListener('click', () => closeOv(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('ov').hidden) closeOv(false); });
+  $('r-reset').addEventListener('click', () => { log.length = 0; done.clear(); renderLog(); drawSmall(); say('r-msg', ''); });
+  $('r-copy').addEventListener('click', () => {
+    if (!log.length) { say('r-msg', 'Aún no hay nada que copiar.'); return; }
+    const txt = 'REPARTO DEL TRABAJO\n\n' + log.map((e) => '- ' + e.t + ' → ' + e.n).join('\n');
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => say('r-msg', '✔ Reparto copiado.'), () => say('r-msg', '✖ No se pudo copiar. Selecciona el texto a mano.'));
+  });
+  MOODS.forEach(([e, t]) => {
+    const b = make('button', 'pill', e); b.type = 'button'; b.title = t; b.setAttribute('aria-label', t);
+    b.addEventListener('click', () => { const who = $('m-who').value; if (!who) return; moods[who] = e; renderMoods(); writeRoom('moods',moods); });
+    $('moods').append(b);
+  });
+  BADGES.forEach(([e, t], i) => {
+    const b = make('button', 'pill' + (i === 0 ? ' on' : ''), e + ' ' + t); b.type = 'button';
+    b.addEventListener('click', () => { badge = i; document.querySelectorAll('#badges .pill').forEach((x, j) => x.classList.toggle('on', j === i)); });
+    $('badges').append(b);
+  });
+  $('k-send').addEventListener('click', () => {
+    const who = $('k-who').value;
+    if (!who) { say('k-msgs', 'Añade integrantes arriba 👆'); return; }
+    const [e, t] = BADGES[badge], msg = $('k-msg').value.trim();
+    addRoomEntry('wall',{who,emoji:e,badge:t,message:msg,createdAt:Date.now()});
+    $('k-msg').value = '';
+    say('k-msgs', roomCode ? '💌 Mensaje enviado al muro compartido.' : 'Conecta una sala para publicar el mensaje para todos.');
+  });
+  $('room-connect').addEventListener('click', connectRoom);
+  $('room-code').addEventListener('keydown',(e)=>{if(e.key==='Enter')connectRoom();});
+  const localToday=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+  $('task-date').value = localToday();
+  $('task-add').addEventListener('click',()=>{
+    const who=$('task-who').value, work=$('task-work').value.trim(), date=$('task-date').value;
+    if(!roomCode){say('room-status','Conecta una sala antes de guardar tareas.');return;}
+    if(!who||!work||!date){say('room-status','Completa integrante, trabajo y fecha.');return;}
+    addRoomEntry('tasks',{who,work,date,createdAt:Date.now()}); $('task-work').value='';
+    say('room-status','✓ Tarea guardada en el dashboard compartido.');
+  });
+  const savedRoom=localStorage.getItem('eq-room'); if(savedRoom) $('room-code').value=savedRoom;
+  $('reto-b').addEventListener('click', () => { const r = $('reto'); r.hidden = false; r.textContent = '🎁 ' + RETOS[rnd(RETOS.length)]; });
+  $('s-orden').addEventListener('click', () => { if (!needTeam()) sorteo(shuffle(members).map((n, i) => ['#' + (i + 1) + ' en exponer', avatar(n) + ' ' + n])); });
+  $('s-roles').addEventListener('click', () => { if (!needTeam()) { const m = shuffle(members); sorteo(ROLES.map((r, i) => [r, avatar(m[i % m.length]) + ' ' + m[i % m.length]])); } });
+  $('s-grupos').addEventListener('click', () => {
+    if (needTeam()) return;
+    const k = Math.max(2, Math.min(+$('s-g').value || 2, 8, members.length)), gs = Array.from({ length: k }, () => []);
+    shuffle(members).forEach((n, i) => gs[i % k].push(avatar(n) + ' ' + n));
+    sorteo(gs.map((g, i) => ['👥 Grupo ' + (i + 1), g.join(' · ')]));
+  });
+  renderMembers(); renderLog(); renderMoods(); drawSmall();
+
+})();
+</script>
+</body>
+</html>
